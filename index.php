@@ -36,7 +36,7 @@
 <?php
     if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
     { ?>
-            <form class="form-horizontal" id="dlForm" action="<?php echo $ajaxPage; ?>" method="GET">
+            <form class="form-horizontal" id="dlForm" action="<?php echo $ajaxPage; ?>" method="POST">
                 <fieldset id="ajax-form">
                     <div class="form-group">
                         <div class="col-lg-10">
@@ -77,11 +77,12 @@
 
                 request.onreadystatechange = function () {
                     var output = document.getElementById("ajax-output");
+
+                    document.getElementById("ajax-form").style.display = 'block';
+                    document.getElementById("ajax-wait").style.display = 'none';
+
                     if (request.readyState === 4 && request.status === 200) {
                         var jsonData = JSON.parse(request.response);
-
-                        document.getElementById("ajax-form").style.display = 'block';
-                        document.getElementById("ajax-wait").style.display = 'none';
 
                         if (jsonData.result == "success") {
                             output.innerHTML = '<div class="alert alert-success"><strong>Download succeed!</strong> <a href="<?php echo $listPage; ?>" class="alert-link">Go to the file</a>.</div>';
@@ -109,6 +110,7 @@
                 setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "20%"; }, 5000);
                 setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "45%"; }, 8000);
                 setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "70%"; }, 18000);
+                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "80%"; }, 23000);
                 setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "90%"; }, 32000);
                 setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "92%"; }, 40000);
                 setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "94%"; }, 50000);
