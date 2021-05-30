@@ -37,7 +37,7 @@
     if(isset($_GET['url']) && !empty($_GET['url']) && !empty($_GET['downloadFileType']) && $_SESSION['logged'] == 1)
     {
         $url = escapeshellarg($_GET['url']);
-        $namingScheme = '%(uploader)s - %(title)s \(key: %(id)s\).%(ext)s';
+        $namingScheme = '%(uploader)s - %(title)s (key: %(id)s).%(ext)s';
 
         if ($_GET['downloadFileType'] == 'audio')
             $cmd = 'youtube-dl -x --audio-format mp3 -f \'bestvideo[height<=1080]+bestaudio/best[height<=1080]\' -o ' . escapeshellarg($folder.$namingScheme) . ' ' . $url . ' 2>&1';
