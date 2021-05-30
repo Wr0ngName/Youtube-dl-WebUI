@@ -3,8 +3,12 @@
     require_once("sessions.php");
     require_once("utilities.php");
 
-    if (!isset($_POST['url']))
+    if (!isset($_POST['url']) && !isset($_GET['url']))
         $input = json_decode(file_get_contents('php://input'), true);
+    elseif (isset($_POST['url']))
+        $input = $_POST;
+    elseif (isset($_GET['url']))
+        $input = $_GET;
 
     $return = [ "result" => "waiting", "message" => "" ];
 

@@ -71,9 +71,14 @@
                 event.preventDefault();
 
                 var request = new XMLHttpRequest();
-                var target = "<?php echo $ajaxPage; ?>";
-                request.open("POST", target, true);
-                request.setRequestHeader("Content-Type", "application/json");
+                var downloadFileType =  document.getElementById("downloadFileType").value;
+                var url = document.getElementById("url").value;
+
+                var data = encodeURIComponent("downloadFileType") + '=' + encodeURIComponent(downloadFileType) + '&' + encodeURIComponent("url") + '=' + encodeURIComponent(url);
+
+                var target = "<?php echo $ajaxPage; ?>?" + data;
+                request.open("GET", target, true);
+                request.setRequestHeader("Content-Type", "x-www-form-urlencoded");
 
                 request.onreadystatechange = function () {
                     var output = document.getElementById("ajax-output");
@@ -96,15 +101,12 @@
                     }
                 };
 
-                var downloadFileType =  document.getElementById("downloadFileType").value;
-                var url = document.getElementById("url").value;
-
-                var data = JSON.stringify({"downloadFileType": downloadFileType, "url": url});
-
                 document.getElementById("ajax-form").style.display = 'none';
                 document.getElementById("ajax-wait").style.display = 'block';
 
                 document.getElementById("ajax-wait-progress").style.width = "5%";
+
+                request.send();
 
                 setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "10%"; }, 2000);
                 setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "20%"; }, 5000);
@@ -117,8 +119,6 @@
                 setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "96%"; }, 60000);
                 setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "98%"; }, 90000);
                 setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "99%"; }, 120000);
-
-                request.send(data);
 
             });
             </script>
