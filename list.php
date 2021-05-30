@@ -62,12 +62,18 @@ if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
         {
                 $outputMsg = 'File '.$fileToDel.' could not be found!';
         }
+        
+        echo '<div class="row">';
+        echo '<div class="col-lg-12">';
 
         echo '<div class="panel panel-'.$outputType.'">';
         echo '  <div class="panel-heading"><h3 class="panel-title">File to delete : '.$fileToDel.'</h3></div>';
         echo '  <div class="panel-body">'.$outputMsg.'</div>';
         echo '</div>';
         echo '<p><a href="'.$listPage.'">Go back</a></p>';
+
+        echo '</div>';
+        echo '</div>';
     }
     elseif(!file_exists($folder))
     {
