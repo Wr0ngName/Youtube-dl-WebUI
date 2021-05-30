@@ -37,6 +37,14 @@
                 exit;
 
             }
+            else
+            {
+                header("Location: ".$listPage);
+            }
+        }
+        else
+        {
+            header("Location: ".$listPage);
         }
     }
     else
