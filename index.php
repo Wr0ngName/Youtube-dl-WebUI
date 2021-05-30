@@ -27,7 +27,7 @@
             <div class="navbar-collapse collapse navbar-responsive-collapse">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="<?php echo $mainPage; ?>">Download</a></li>
-                    <li><a href="<?php echo $listPage; ?>">List of videos</a></li>
+                    <li><a href="<?php echo $listPage; ?>">Browse</a></li>
                 </ul>
             </div>
         </div>
@@ -47,7 +47,7 @@
         if($ret == 0)
         {
             echo '<div class="alert alert-success">
-                    <strong>Download succeed !</strong> <a href="'.$listPage.'" class="alert-link">Link to the video</a>.
+                    <strong>Download succeed !</strong> <a href="'.$listPage.'" class="alert-link">Link to the file</a>.
                 </div>';
         }
         else{
@@ -114,13 +114,14 @@
     else{ ?>
         <form class="form-horizontal" action="<?php echo $mainPage; ?>" method="POST" >
             <fieldset>
-                <legend>You need to login first</legend>
+                <legend>Login</legend>
                 <div class="form-group">
-                    <div class="col-lg-4"></div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-8">
                         <input class="form-control" id="passwd" name="passwd" placeholder="Password" type="password">
                     </div>
-                    <div class="col-lg-4"></div>
+                    <div class="col-lg-2">
+                        <button type="submit" class="btn btn-primary">Log in</button>
+                    </div>
                 </div>
             </fieldset>
         </form>

@@ -26,7 +26,7 @@
             <div class="navbar-collapse  collapse navbar-responsive-collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="<?php echo $mainPage; ?>">Download</a></li>
-                    <li class="active"><a href="<?php echo $listPage; ?>">List of videos</a></li>
+                    <li class="active"><a href="<?php echo $listPage; ?>">Browse</a></li>
                 </ul>
             </div>
         </div>
@@ -106,7 +106,7 @@ if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
         }
 } 
 else {
-    echo '<div class="alert alert-danger"><strong>Access denied :</strong> You must sign in before !</div>';
+    echo '<div class="alert alert-danger"><strong>Access denied:</strong> You must log in!</div>';
 } ?>
                     </tr>
                 </tbody>

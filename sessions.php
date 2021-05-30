@@ -29,5 +29,6 @@
 	{
 		global $security;
 		if($security == 1) session_destroy();
+		header("Location: ./".$mainPage);
 	}
 ?>
