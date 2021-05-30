@@ -36,33 +36,35 @@ if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
 {
     if(isset($_GET['fileToDel']))
     {
-        $fileToDel = $_GET['fileToDel'];
+        $fileToDel = htmlspecialchars($_GET['fileToDel']);
+        $outputType = 'danger';
 
-        if(file_exists($folder.$fileToDel))
+        if(file_exists($folder.$fileToDel) && substr($fileToDel, 0, 1) != '/' && substr($fileToDel, 0, 1) != '.')
         {
             if(unlink($folder.$fileToDel))
             {
-                echo '<div class="panel panel-success">';
-                echo '<div class="panel-heading"><h3 class="panel-title">Fichier à supprimer : '.$fileToDel.'</h3></div>';
-                echo '<div class="panel-body">Le fichier '.$fileToDel.' a été supprimé !</div>';
+                $outputType = 'success';
+                $outputMsg = 'File '.$fileToDel.' has been deleted!';
+                echo '<div class="panel-heading"><h3 class="panel-title">File to delete : '.$fileToDel.'</h3></div>';
+                echo '<div class="panel-body"></div>';
                 echo '</div>';
                 echo '<p><a href="'.$listPage.'">Go back</a></p>';
             }
-            else{
-                echo '<div class="panel panel-danger">';
-                echo '<div class="panel-heading"><h3 class="panel-title">Fichier à supprimer : '.$fileToDel.'</h3></div>';
-                echo '<div class="panel-body">Le fichier '.$fileToDel.' n\'a pas pu être supprimé !</div>';
-                echo '</div>';
-                echo '<p><a href="'.$listPage.'">Go back</a></p>';
+            else
+            {
+                $outputMsg = 'File '.$fileToDel.' could not be deleted!';
             }
         }
-        else{
-            echo '<div class="panel panel-danger">';
-            echo '<div class="panel-heading"><h3 class="panel-title">Fichier à supprimer : '.$fileToDel.'</h3></div>';
-            echo '<div class="panel-body">Le fichier '.$fileToDel.' ne peut pas être supprimé car il est introuvable !</div>';
-            echo '</div>';
-            echo '<p><a href="'.$listPage.'">Go back</a></p>';
+        else
+        {
+                $outputMsg = 'File '.$fileToDel.' could not be found!';
         }
+
+        echo '<div class="panel panel-'.$outputType.'">';
+        echo '  <div class="panel-heading"><h3 class="panel-title">File to delete : '.$fileToDel.'</h3></div>';
+        echo '  <div class="panel-body">'.$outputMsg.'</div>';
+        echo '</div>';
+        echo '<p><a href="'.$listPage.'">Go back</a></p>';
     }
     elseif(!file_exists($folder))
     {
@@ -106,8 +108,8 @@ else {
         <br>
         <footer>
             <div class="well text-center">
-                <p><a href="https://github.com/p1rox/Youtube-dl-WebUI" target="_blank">Fork me on Github</a></p>
-                <p>Created by <a href="https://twitter.com/p1rox" target="_blank">@p1rox</a> - Web Site : <a href="http://p1rox.fr" target="_blank">p1rox.fr</a></p>
+                <p><a href="https://github.com/p1rox/Youtube-dl-WebUI" target="_blank">Forked from Github</a></p>
+                <p>Adapted by <a href="https://twitter.com/_wr0ngname_" target="_blank">@_wr0ngname_</a> - Web Site : <a href="https://wr0ng.name" target="_blank">wr0ng.name</a></p>
             </div>
         </footer>
     </body>
