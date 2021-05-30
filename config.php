@@ -14,6 +14,9 @@ $listPage = "list.php";
 //Rename it only if you change get.php to download.php for example
 $getPage = "get.php";
 
+//Rename it only if you change downloadAsync.php to downloader.php for example
+$ajaxPage = "downloadAsync.php";
+
 // Enable password to access the panel
 // 1 -> enable 0 -> disable
 $security = 1; 

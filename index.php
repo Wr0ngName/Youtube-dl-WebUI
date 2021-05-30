@@ -34,37 +34,10 @@
         <div class="container">
             <h1>Download</h1>
 <?php
-    if(isset($_GET['url']) && !empty($_GET['url']) && !empty($_GET['downloadFileType']) && $_SESSION['logged'] == 1)
-    {
-        $url = escapeshellarg($_GET['url']);
-        $namingScheme = '%(uploader)s - %(title)s (key: %(id)s).%(ext)s';
-
-        if ($_GET['downloadFileType'] == 'audio')
-            $cmd = 'youtube-dl -x --audio-format mp3 -f \'bestvideo[height<=1080]+bestaudio/best[height<=1080]\' -o ' . escapeshellarg($folder.$namingScheme) . ' ' . $url . ' 2>&1';
-        else
-            $cmd = 'youtube-dl -f \'bestvideo[height<=1080]+bestaudio/best[height<=1080]\' -o ' . escapeshellarg($folder.$namingScheme) . ' ' . $url . ' 2>&1';
-
-        exec($cmd, $output, $ret);
-        if($ret == 0)
-        {
-            echo '<div class="alert alert-success">
-                    <strong>Download succeed !</strong> <a href="'.$listPage.'" class="alert-link">Link to the file</a>.
-                </div>';
-        }
-        else{
-            echo '<div class="alert alert-dismissable alert-danger">
-                    <strong>Oh snap!</strong> Something went wrong. Error code : <br>';
-            foreach($output as $out)
-            {
-                echo $out . '<br>'; 
-            }
-            echo '</div>';
-        }
-    }
-    elseif(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
+    if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
     { ?>
-            <form class="form-horizontal" action="<?php echo $mainPage; ?>">
-                <fieldset>
+            <form class="form-horizontal" id="dlForm" action="<?php echo $ajaxPage; ?>" method="GET">
+                <fieldset id="ajax-form">
                     <div class="form-group">
                         <div class="col-lg-10">
                             <input class="form-control" id="url" name="url" placeholder="Link to video or playlist" type="text">
@@ -80,9 +53,74 @@
                             <label><input class="form-check-input" type="radio" name="downloadFileType" id="downloadFileType" value="audio"> Audio (MP3)</label>
                         </div>
                     </div>
-                    
                 </fieldset>
+
+                <div id="ajax-wait" style="display:none;">
+                    <div class="progress">
+                      <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 1%" id="ajax-wait-progress"></div>
+                    </div>
+                </div>
+                <div id="ajax-output"></div>
             </form>
+
+            <script type="text/javascript">
+            const contactForm = document.getElementById("dlForm");
+
+            contactForm.addEventListener("submit", function(event) {
+
+                event.preventDefault();
+
+                var request = new XMLHttpRequest();
+                var target = "<?php echo $ajaxPage; ?>";
+                request.open("POST", target, true);
+                request.setRequestHeader("Content-Type", "application/json");
+
+                request.onreadystatechange = function () {
+                    var output = document.getElementById("ajax-output");
+                    if (request.readyState === 4 && request.status === 200) {
+                        var jsonData = JSON.parse(request.response);
+
+                        document.getElementById("ajax-form").style.display = 'block';
+                        document.getElementById("ajax-wait").style.display = 'none';
+
+                        if (jsonData.result == "success") {
+                            output.innerHTML = '<div class="alert alert-success"><strong>Download succeed!</strong> <a href="<?php echo $listPage; ?>" class="alert-link">Go to the file</a>.</div>';
+                        }
+                        else
+                        {
+                            output.innerHTML = '<div class="alert alert-danger"><strong>Download error!</strong> More Details:<pre>' + jsonData.message + '</pre></div>';
+                        }
+                    } else {
+                        output.innerHTML = '<div class="alert alert-danger"><strong>Download error!</strong> General error happened. Contact the administrator if this happens again.</div>';
+                    }
+                };
+
+                var downloadFileType =  document.getElementById("downloadFileType").value;
+                var url = document.getElementById("url").value;
+
+                var data = JSON.stringify({"downloadFileType": downloadFileType, "url": url});
+
+                document.getElementById("ajax-form").style.display = 'none';
+                document.getElementById("ajax-wait").style.display = 'block';
+
+                document.getElementById("ajax-wait-progress").style.width = "5%";
+
+                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "10%"; }, 2000);
+                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "20%"; }, 5000);
+                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "45%"; }, 8000);
+                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "70%"; }, 18000);
+                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "90%"; }, 32000);
+                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "92%"; }, 40000);
+                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "94%"; }, 50000);
+                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "96%"; }, 60000);
+                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "98%"; }, 90000);
+                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "99%"; }, 120000);
+
+                request.send(data);
+
+            });
+            </script>
+
             <br>
 
             <?php destFolderExists($folder);?>
