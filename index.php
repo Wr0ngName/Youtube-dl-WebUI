@@ -34,10 +34,15 @@
         <div class="container">
             <h1>Download</h1>
 <?php
-    if(isset($_GET['url']) && !empty($_GET['url']) && $_SESSION['logged'] == 1)
+    if(isset($_GET['url']) && !empty($_GET['url']) && !empty($_GET['downloadFileType']) && $_SESSION['logged'] == 1)
     {
         $url = $_GET['url'];
-        $cmd = 'youtube-dl -o ' . escapeshellarg($folder.'%(title)s-%(uploader)s.%(ext)s') . ' ' . escapeshellarg($url) . ' 2>&1';
+
+        if ($_GET['downloadFileType'] == 'audio')
+            $cmd = 'youtube-dl -x --audio-format mp3 -f \'bestvideo[height<=1080]+bestaudio/best[height<=1080]\' -o ' . escapeshellarg($folder.'%(title)s-%(uploader)s.%(ext)s') . ' ' . escapeshellarg($url) . ' 2>&1';
+        else
+            $cmd = 'youtube-dl -f \'bestvideo[height<=1080]+bestaudio/best[height<=1080]\' -o ' . escapeshellarg($folder.'%(title)s-%(uploader)s.%(ext)s') . ' ' . escapeshellarg($url) . ' 2>&1';
+
         exec($cmd, $output, $ret);
         if($ret == 0)
         {
@@ -60,11 +65,18 @@
             <form class="form-horizontal" action="<?php echo $mainPage; ?>">
                 <fieldset>
                     <div class="form-group">
-                        <div class="col-lg-10">
+                        <div class="col-lg-8">
                             <input class="form-control" id="url" name="url" placeholder="Link" type="text">
                         </div>
                         <div class="col-lg-2">
                         <button type="submit" class="btn btn-primary">Download</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-lg-12">
+                            <label><input class="form-check-input" type="radio" name="downloadFileType" id="downloadFileType" value="video" checked="checked"> Video (MP4)</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label><input class="form-check-input" type="radio" name="downloadFileType" id="downloadFileType" value="audio"> Audio (MP3)</label>
                         </div>
                     </div>
                     
