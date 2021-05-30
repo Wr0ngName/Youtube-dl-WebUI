@@ -131,8 +131,8 @@
         </div><!-- End container -->
         <footer>
             <div class="well text-center">
-                <p><a href="https://github.com/p1rox/Youtube-dl-WebUI" target="_blank">Fork me on Github</a></p>
-                <p>Created by <a href="https://twitter.com/p1rox" target="_blank">@p1rox</a> - Web Site : <a href="http://p1rox.fr" target="_blank">p1rox.fr</a></p>
+                <p><a href="https://github.com/p1rox/Youtube-dl-WebUI" target="_blank">Forked from Github</a></p>
+                <p>Adapted by <a href="https://twitter.com/_wr0ngname_" target="_blank">@_wr0ngname_</a> - Website : <a href="https://wr0ng.name" target="_blank">wr0ng.name</a></p>
             </div>
         </footer>
     </body>

@@ -36,7 +36,10 @@ if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
 {
     if(isset($_GET['fileToDel']))
     {
-        $fileToDel = htmlspecialchars($_GET['fileToDel']);
+        $rawFile = htmlspecialchars($_GET['fileToDel']);
+        $tmpFile = pathinfo($rawFile);
+        $fileToDel  = $tmpFile['basename'];
+
         $outputType = 'danger';
 
         if(file_exists($folder.$fileToDel) && substr($fileToDel, 0, 1) != '/' && substr($fileToDel, 0, 1) != '.')
@@ -89,7 +92,7 @@ if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
             {
                 $filename = str_replace($folder, "", $file); // Need to fix accent problem with something like this : utf8_encode
                 echo "<tr>"; //New line
-                echo "<td height=\"30px\"><a href=\"$folder$filename\">$filename</a></td>"; //1st col
+                echo "<td height=\"30px\"><a target=\"_blank\" href=\"".$getPage."?fileToGet=$filename\">$filename</a></td>"; //1st col
                 echo "<td>".human_filesize(filesize($folder.$filename))."</td>"; //2nd col
                 echo "<td><a href=\"".$listPage."?fileToDel=$filename\" class=\"text-danger\">Delete</a></td>"; //3rd col
                 echo "</tr>"; //End line
@@ -109,7 +112,7 @@ else {
         <footer>
             <div class="well text-center">
                 <p><a href="https://github.com/p1rox/Youtube-dl-WebUI" target="_blank">Forked from Github</a></p>
-                <p>Adapted by <a href="https://twitter.com/_wr0ngname_" target="_blank">@_wr0ngname_</a> - Web Site : <a href="https://wr0ng.name" target="_blank">wr0ng.name</a></p>
+                <p>Adapted by <a href="https://twitter.com/_wr0ngname_" target="_blank">@_wr0ngname_</a> - Website : <a href="https://wr0ng.name" target="_blank">wr0ng.name</a></p>
             </div>
         </footer>
     </body>
