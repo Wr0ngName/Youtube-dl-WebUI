@@ -41,7 +41,7 @@
     }
     else
     {
-        header("Location: /".$listPage);
+        header("Location: ".$mainPage);
     }
 
 ?>
