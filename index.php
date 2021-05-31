@@ -71,7 +71,13 @@
                 event.preventDefault();
 
                 var request = new XMLHttpRequest();
-                var downloadFileType =  document.getElementById("downloadFileType").value;
+                var downloadFileType =  "video";
+                var ele = document.getElementsByName('downloadFileType');
+                for(i = 0; i < ele.length; i++) {
+                    if(ele[i].checked)
+                        downloadFileType = ele[i].value;
+                }
+
                 var url = document.getElementById("url").value;
 
                 var data = encodeURIComponent("downloadFileType") + '=' + encodeURIComponent(downloadFileType) + '&' + encodeURIComponent("url") + '=' + encodeURIComponent(url);
