@@ -65,6 +65,39 @@
 
             <script type="text/javascript">
             const contactForm = document.getElementById("dlForm");
+            var progressInterval = 0;
+
+            function showProgress() {
+                var targetProgress = "<?php echo $progressPage; ?>";
+                var requestProgress = new XMLHttpRequest();
+                requestProgress.open("GET", targetProgress);
+                requestProgress.onload = function () {
+                    var output = document.getElementById("ajax-output");
+                    if (requestProgress.readyState === 4 && requestProgress.status === 200) {
+                        var jsonDataProgress = JSON.parse(requestProgress.response);
+                        document.getElementById("ajax-wait-progress").style.width = jsonDataProgress.progress + "%";
+
+                        if(parseInt(jsonDataProgress.progress) == 100) {
+                            stopProgress();
+                            output.innerHTML = '<div class="alert alert-success"><strong>Download succeed!</strong> <a href="<?php echo $listPage; ?>" class="alert-link">Go to the file</a>.</div>';
+                            document.getElementById("ajax-form").style.display = 'block';
+                            document.getElementById("ajax-wait").style.display = 'none';
+                        }
+                    }
+                }
+                requestProgress.send();
+            }
+
+            function stopProgress() {
+                console.log('timeout unset');
+                clearInterval(progressInterval);
+            }
+
+            function reportProgress() {
+                showProgress()
+                progressInterval = setInterval(showProgress, 1000);
+                console.log('timeout set');
+            }
 
             contactForm.addEventListener("submit", function(event) {
 
@@ -86,17 +119,14 @@
                 request.open("GET", target, true);
                 request.setRequestHeader("Content-Type", "x-www-form-urlencoded");
 
-                request.onreadystatechange = function () {
+                request.onload = function () {
                     var output = document.getElementById("ajax-output");
-
-                    document.getElementById("ajax-form").style.display = 'block';
-                    document.getElementById("ajax-wait").style.display = 'none';
 
                     if (request.readyState === 4 && request.status === 200) {
                         var jsonData = JSON.parse(request.response);
 
                         if (jsonData.result == "success") {
-                            output.innerHTML = '<div class="alert alert-success"><strong>Download succeed!</strong> <a href="<?php echo $listPage; ?>" class="alert-link">Go to the file</a>.</div>';
+                            reportProgress();
                         }
                         else
                         {
@@ -110,23 +140,18 @@
                 document.getElementById("ajax-form").style.display = 'none';
                 document.getElementById("ajax-wait").style.display = 'block';
 
-                document.getElementById("ajax-wait-progress").style.width = "5%";
-
                 request.send();
 
-                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "10%"; }, 2000);
-                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "20%"; }, 5000);
-                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "45%"; }, 8000);
-                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "70%"; }, 18000);
-                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "80%"; }, 23000);
-                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "90%"; }, 32000);
-                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "92%"; }, 40000);
-                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "94%"; }, 50000);
-                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "96%"; }, 60000);
-                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "98%"; }, 90000);
-                setTimeout(function(){ document.getElementById("ajax-wait-progress").style.width = "99%"; }, 120000);
-
             });
+
+            <?php
+                if (isset($_SESSION['task']) && file_exists($_SESSION['task']))
+                {
+                    echo "  reportProgress();
+                            document.getElementById(\"ajax-form\").style.display = 'none';
+                            document.getElementById(\"ajax-wait\").style.display = 'block';";
+                }
+            ?>
             </script>
 
             <br>
