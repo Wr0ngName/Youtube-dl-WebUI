@@ -83,6 +83,8 @@
                             document.getElementById("ajax-form").style.display = 'block';
                             document.getElementById("ajax-wait").style.display = 'none';
                         }
+                    } else {
+                        output.innerHTML = '<div class="alert alert-danger"><strong>Download error!</strong> General error happened. Contact the administrator if this happens again.</div>';
                     }
                 }
                 requestProgress.send();

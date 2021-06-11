@@ -50,7 +50,6 @@ if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
                 $outputMsg = 'File '.$fileToDel.' has been deleted!';
                 echo '<div class="panel-heading"><h3 class="panel-title">File to delete : '.$fileToDel.'</h3></div>';
                 echo '<div class="panel-body"></div>';
-                echo '</div>';
                 echo '<p><a href="'.$listPage.'">Go back</a></p>';
             }
             else
@@ -82,7 +81,7 @@ if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
                 </div>';
     }
     else { ?>
-        <h2>List of available videos :</h2>
+            <h2>List of available videos :</h2>
             <table class="table table-striped table-hover ">
                 <thead>
                     <tr>
