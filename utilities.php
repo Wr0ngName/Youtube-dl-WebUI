@@ -57,7 +57,7 @@ function getProgress($file)
 
 function trackProgress($file)
 {
-    $currentFile = 0;
+    $currentFile = 1;
     $totalFile = 1;
     $percent = 0;
     $error = false;
