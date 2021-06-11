@@ -65,7 +65,7 @@
 
             <div id="ajax-notif" role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false" style="display:none;">
               <div class="toast-header">
-                <strong class="mr-auto">Progress no moving?</strong>
+                <strong class="mr-auto">Progress not moving?</strong>
               </div>
               <div class="toast-body">
                 Dont panic! Your file is being converted to the right format.<br />Please be patient.
@@ -75,6 +75,8 @@
             <script type="text/javascript">
             const contactForm = document.getElementById("dlForm");
             var progressInterval = 0;
+            var progressLast = 999;
+            var progressSame = 0;
 
             function showNotif() {
                 document.getElementById("ajax-notif").style.display = "block";
@@ -93,8 +95,19 @@
                     if (requestProgress.readyState === 4 && requestProgress.status === 200) {
                         var jsonDataProgress = JSON.parse(requestProgress.response);
                         document.getElementById("ajax-wait-progress").style.width = jsonDataProgress.progress + "%";
+                        if(jsonDataProgress.progress == progressLast) {
+                            progressSame = progressSame + 1;
+                            if(progressLast > 0 && progressSame >= 10)
+                            {
+                                showNotif();
+                                setTimeout(hideNotif, 10000);
+                                progressSame = 0;
+                            }
+                        } else {
+                            progressSame = 0;
+                        }
 
-                        var progressLast = parseInt(jsonDataProgress.progress);
+                        progressLast = parseInt(jsonDataProgress.progress);
 
                         if(jsonDataProgress.result == "converting") {
                             showNotif();

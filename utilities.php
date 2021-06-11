@@ -67,7 +67,7 @@ function trackProgress($file)
         while (($line = fgets($handle)) !== false) {
             if(preg_match("/\[download\]/", $line))
             {
-                if(preg_match("Downloading video", $line))
+                if(preg_match("/Downloading video/", $line))
                 {
                     if(preg_match('/(\d+) of (\d+)/', $line, $matches))
                     {
