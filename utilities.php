@@ -60,13 +60,16 @@ function trackProgress($file)
     $currentFile = 0;
     $totalFile = 1;
     $percent = 0;
+    $error = false;
 
-    $handle = fopen($file, "r");
-    if ($handle) {
-        while (($line = fgets($handle)) !== false) {
-            if(strpos($line, "[download]") !== false)
+    $fileContent = file_get_contents($file);
+    if ($fileContent !== false) {
+        $lines = explode("\n", $fileContent);
+        foreach ($lines as $line)
+        {
+            if(preg_match("/\[download\]/", $line))
             {
-                if(strpos($line, "Downloading video ") !== false)
+                if(preg_match("Downloading video", $line))
                 {
                     preg_match('/(\d+) of (\d+)/', $line, $matches);
 
@@ -74,38 +77,51 @@ function trackProgress($file)
                     {
                         $currentFile = intval($matches[1]);
                         $totalFile = intval($matches[2]);
+                        $error = false;
                     }
                 }
-                elseif(strpos($line, "iB/s ETA") !== false)
+                elseif(preg_match("/iB\/s ETA/", $line))
                 {
-                    preg_match('/(\d+\.\d)% of/', $line, $matches);
+                    preg_match('/(\d+(\.\d+)?)% of/', $line, $matches);
 
                     if(count($matches)>1)
                     {
-                        $percent = floatval($matches[1]);
+                        $percent = substr($matches[1], '.') ? floatval($matches[1]) : intval($matches[1]);
+                        $error = false;
                     }
                 }
             }
         }
+    } else 
+        $error = "file could not be opened";
 
-        fclose($handle);
-    }
-
-    return ["percent" => $percent, "current" => $currentFile, "total" => $totalFile]; 
+    return ["percent" => $percent, "current" => $currentFile, "total" => $totalFile, "error" => $error]; 
 }
 
 function getProgressBis($file)
 {
     $fileArray = trackProgress($file);
+    $error = true;
 
-    $files = ($fileArray['current'] / $fileArray['total']);
-    $part = $fileArray['percent'] * $files;
+    if ($fileArray['error'] == false)
+    {
+        $files = ($fileArray['current'] / $fileArray['total']);
+        $part = $fileArray['percent'] * $files;
 
-    $percent = $files*100 + $part;
+        $percent = $files*100 + $part;
 
-    if ($percent > 100) $percent = 100;
+        if (is_numeric($percent))
+        {
+            if ($percent > 100) $percent = 100;
 
-    return $percent;
+            $error = false;
+        } else 
+            $error = "Error calculating progress";
+
+    } else 
+        $error = $fileArray['error'];
+
+    return [ 'progress' => $percent, 'error' => $error ];
 }
 
 ?>

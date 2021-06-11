@@ -9,7 +9,7 @@
     {
         if(isset($_GET['fileToGet']))
         {
-            $rawFile = htmlspecialchars($_GET['fileToGet']);
+            $rawFile = base64_decode($_GET['fileToGet']);
             $tmpFile = pathinfo($rawFile);
             $fileToGet  = $tmpFile['basename'];
 

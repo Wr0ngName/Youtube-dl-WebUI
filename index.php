@@ -63,9 +63,28 @@
                 <div id="ajax-output"></div>
             </form>
 
+            <div id="ajax-notif" role="alert" aria-live="assertive" aria-atomic="true" class="toast" data-autohide="false" style="display:none;">
+              <div class="toast-header">
+                <strong class="mr-auto">Info</strong>
+              </div>
+              <div class="toast-body">
+                Progress is stuck? Dont panic! Your file is being converted to the right format.<br />Please be patient.
+              </div>
+            </div>
+
             <script type="text/javascript">
             const contactForm = document.getElementById("dlForm");
             var progressInterval = 0;
+            var progressLast = 999;
+            var progressSame = 0;
+
+            function showNotif() {
+                document.getElementById("ajax-notif").style.display = "block";
+            }
+
+            function hideNotif() {
+                document.getElementById("ajax-notif").style.display = "none";
+            }
 
             function showProgress() {
                 var targetProgress = "<?php echo $progressPage; ?>";
@@ -76,15 +95,34 @@
                     if (requestProgress.readyState === 4 && requestProgress.status === 200) {
                         var jsonDataProgress = JSON.parse(requestProgress.response);
                         document.getElementById("ajax-wait-progress").style.width = jsonDataProgress.progress + "%";
+                        if(jsonDataProgress.progress == progressLast) {
+                            progressSame = progressSame + 1;
+                            if(progressLast > 0 && progressSame >= 10)
+                            {
+                                showNotif();
+                                setTimeout(hideNotif, 10000);
+                                progressSame = 0;
+                            }
+                        } else {
+                            progressSame = 0;
+                        }
+                        progressLast = jsonDataProgress.progress;
 
                         if(parseInt(jsonDataProgress.progress) == 100) {
                             stopProgress();
                             output.innerHTML = '<div class="alert alert-success"><strong>Download succeed!</strong> <a href="<?php echo $listPage; ?>" class="alert-link">Go to the file</a>.</div>';
                             document.getElementById("ajax-form").style.display = 'block';
                             document.getElementById("ajax-wait").style.display = 'none';
+                        } else if(jsonDataProgress.message != "") {
+                            stopProgress();
+                            output.innerHTML = '<div class="alert alert-danger"><strong>Download error!</strong> General error happened. Contact the administrator if this happens again.</div>';
+                            document.getElementById("ajax-form").style.display = 'block';
+                            document.getElementById("ajax-wait").style.display = 'none';
                         }
                     } else {
                         output.innerHTML = '<div class="alert alert-danger"><strong>Download error!</strong> General error happened. Contact the administrator if this happens again.</div>';
+                        document.getElementById("ajax-form").style.display = 'block';
+                        document.getElementById("ajax-wait").style.display = 'none';
                     }
                 }
                 requestProgress.send();

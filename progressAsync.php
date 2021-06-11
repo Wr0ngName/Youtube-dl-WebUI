@@ -10,12 +10,19 @@
         if (file_exists($_SESSION['task']))
         {
             $taskFile = $_SESSION['task'];
-            $progress = getProgressBis($taskFile);
+            $activity = getProgressBis($taskFile);
+
+            if ($activity['error'] == false)
+                $progress = $activity['progress'];
+            else
+                $return['message'] = $activity['error'];
         }
         else
         {
+            unset($_SESSION['task']);
             $progress = 100;
         }
+
         $return['progress'] = $progress;
     }
     else
