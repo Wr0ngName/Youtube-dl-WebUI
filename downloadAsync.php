@@ -24,7 +24,7 @@
         if ($input['downloadFileType'] == 'audio')
             $cmd .= ' -x --audio-format mp3';
 
-        exec('sh -c "' . $cmd . ' > ' . $temp . ' ; rm ' . $temp . '" > /dev/null 2>/dev/null &', $output, $ret);
+        exec('nohup sh -c "' . $cmd . ' > ' . $temp . ' ; rm ' . $temp . '" > /dev/null 2>/dev/null &', $output, $ret);
 
         if($ret == 0)
         {
