@@ -102,7 +102,6 @@ function getProgressBis($file)
     {
         $part = $fileArray["percent"] / $fileArray["total"];                    //  9 / 21
         $files = (($fileArray["current"]-1) / $fileArray["total"] ) * 100;        //  1-1 / 21
-        echo $files;
         $percent = $part + $files;
 
         if ($percent > 100)
