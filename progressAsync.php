@@ -13,7 +13,11 @@
             $activity = getProgressBis($taskFile);
 
             if ($activity['error'] == false)
+            {
                 $progress = $activity['progress'];
+                if($progress == 100)
+                    $return['result'] = 'converting';
+            }
             else
                 $return['message'] = $activity['error'];
         }

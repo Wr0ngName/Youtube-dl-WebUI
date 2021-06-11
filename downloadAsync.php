@@ -19,11 +19,10 @@
         $temp = tempnam($folder, ".ytprogress_");
 
         $_SESSION['task'] = $temp;
+        $cmd = 'youtube-dl --newline -f \'bestvideo[height<=1080]+bestaudio/best[height<=1080]\' -o ' . escapeshellarg($folder.$namingScheme) . ' ' . $url;
 
         if ($input['downloadFileType'] == 'audio')
-            $cmd = 'youtube-dl -x --audio-format mp3 -f \'bestvideo[height<=1080]+bestaudio/best[height<=1080]\' -o ' . escapeshellarg($folder.$namingScheme) . ' ' . $url;
-        else
-            $cmd = 'youtube-dl -f \'bestvideo[height<=1080]+bestaudio/best[height<=1080]\' -o ' . escapeshellarg($folder.$namingScheme) . ' ' . $url;
+            $cmd .= ' -x --audio-format mp3';
 
         exec('sh -c "' . $cmd . ' > ' . $temp . ' ; rm ' . $temp . '" > /dev/null 2>/dev/null &', $output, $ret);
 
