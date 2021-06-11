@@ -58,7 +58,7 @@ function getProgress($file)
 function trackProgress($file)
 {
     $currentFile = 0;
-    $totalFile = 2;
+    $totalFile = 1;
     $percent = 0;
     $error = false;
 
@@ -100,8 +100,9 @@ function getProgressBis($file)
 
     if ($fileArray["error"] == false)
     {
-        $part = ((($fileArray["current"]*100)+$fileArray["percent"]) / (($fileArray["total"]-1)*100));
-        $percent = $part*100;
+        $part = $fileArray["percent"] / $fileArray["total"];
+        $files = ($fileArray["current"]-1 / $fileArray["total"] ) * 100;
+        $percent = $part + $files;
 
         if ($percent > 100)
             $percent = 100;
