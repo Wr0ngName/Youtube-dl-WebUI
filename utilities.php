@@ -77,7 +77,7 @@ function trackProgress($file)
                 }
                 elseif(preg_match("/iB\/s ETA/", $line))
                 {
-                    if(preg_match('/(\d+(\.\d+)?)% of \d/', $line, $matches))
+                    if(preg_match('/(\d+(\.\d+)?)% of [\~\d]/', $line, $matches))
                     {
                         $percent = ((strpos($matches[1], '.') !== false) ? floatval($matches[1]) : intval($matches[1]));
                     }
