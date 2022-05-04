@@ -20,6 +20,9 @@ $ajaxPage = "downloadAsync.php";
 //Rename it only if you change progressAsync.php to downloader.php for example
 $progressPage = "progressAsync.php";
 
+//Max URLs for file upload
+$maxUrls = 128;
+
 // Enable password to access the panel
 // 1 -> enable 0 -> disable
 $security = 1; 

@@ -51,7 +51,7 @@
                         <div class="col-lg-12">
                             <label><input class="form-check-input" type="radio" name="downloadFileType" id="downloadFileType" value="video" checked="checked"> Video (MP4)</label>&nbsp;&nbsp;&nbsp;&nbsp;
                             <label><input class="form-check-input" type="radio" name="downloadFileType" id="downloadFileType" value="audio"> Audio (MP3)</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                            <label><input class="form-check-input" type="checkbox" name="downloadFileList" id="downloadFileList" value="list" onclick="toggleFileUpload(this)"> Upload a list of URLs (*.txt file, one URL per line, 64 max)</label>
+                            <label><input class="form-check-input" type="checkbox" name="downloadFileList" id="downloadFileList" value="list" onclick="toggleFileUpload(this)"> Upload a list of URLs (*.txt file, one URL per line, <?php echo $maxUrls; ?> max)</label>
                         </div>
                     </div>
                 </fieldset>

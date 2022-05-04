@@ -26,7 +26,7 @@
             $content = "";
 
             if ($handle) {
-                for ($line=0; $line < 64; $line++) {
+                for ($line=0; $line < $maxUrls; $line++) {
                     if($linecontent = fgets($handle))
                         $content .= $linecontent;
                     else
