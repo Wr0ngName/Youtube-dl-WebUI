@@ -55,12 +55,30 @@ function getProgress($file)
         return -1;
 }
 
+function listSize($file)
+{
+    $totalFile = 0;
+
+    $handle = fopen($file . '_list', "r");
+    if ($handle) {
+        while (fgets($handle) !== false) {
+            $totalFile++;
+        }
+
+        fclose($handle);
+    } else 
+        $totalFile = 1;
+
+    return $totalFile; 
+}
+
 function trackProgress($file)
 {
     $currentFile = 1;
     $totalFile = 1;
     $percent = 0;
     $error = false;
+    $listIndex = 0;
 
     $handle = fopen($file, "r");
     if ($handle) {
@@ -77,10 +95,15 @@ function trackProgress($file)
                 }
                 elseif(preg_match("/iB\/s ETA/", $line))
                 {
-                    if(preg_match('/(\d+(\.\d+)?)% of \d/', $line, $matches))
+                    if(preg_match('/(\d+(\.\d+)?)% of [\~\d]/', $line, $matches))
                     {
                         $percent = ((strpos($matches[1], '.') !== false) ? floatval($matches[1]) : intval($matches[1]));
                     }
+                }
+
+                if(preg_match("/Destination:/", $line))
+                {
+                    $listIndex++;
                 }
             }
         }
@@ -89,7 +112,7 @@ function trackProgress($file)
     } else 
         $error = "file could not be opened";
 
-    return ["percent" => $percent, "current" => $currentFile, "total" => $totalFile, "error" => $error]; 
+    return ["percent" => $percent, "listIndex" => $listIndex, "current" => $currentFile, "total" => $totalFile, "error" => $error]; 
 }
 
 function getProgressBis($file)
@@ -97,12 +120,15 @@ function getProgressBis($file)
     $fileArray = trackProgress($file);
     $error = true;
     $percent = -1;
+    $listIndex = 0;
 
     if ($fileArray["error"] == false)
     {
         $part = $fileArray["percent"] / $fileArray["total"];                    //  9 / 21
         $files = (($fileArray["current"]-1) / $fileArray["total"] ) * 100;        //  1-1 / 21
         $percent = $part + $files;
+
+        $listIndex = $fileArray["listIndex"];
 
         if ($percent > 100)
             $percent = 100;
@@ -111,7 +137,7 @@ function getProgressBis($file)
 
     } else $error = $fileArray["error"];
 
-    return [ "progress" => $percent, "error" => $error ];
+    return [ "progress" => $percent, "error" => $error, "listIndex" => $listIndex, "listSize" => listSize($file) ];
 }
 
 ?>

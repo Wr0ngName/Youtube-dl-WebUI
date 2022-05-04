@@ -28,6 +28,9 @@
         }
 
         $return['progress'] = $progress;
+
+        $return['index'] = $activity['listIndex'];
+        $return['slist'] = $activity['listSize'];
     }
     else
     {

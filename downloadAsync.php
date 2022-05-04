@@ -3,28 +3,55 @@
     require_once("sessions.php");
     require_once("utilities.php");
 
-    if (!isset($_POST['url']) && !isset($_GET['url']))
-        $input = json_decode(file_get_contents('php://input'), true);
-    elseif (isset($_POST['url']))
-        $input = $_POST;
-    elseif (isset($_GET['url']))
-        $input = $_GET;
+    $input = $_POST;
+
+    if(!empty($_FILES))
+    {
+        $input['url'] = $_FILES['url'];
+    }
 
     $return = [ "result" => "waiting", "message" => "" ];
+    $tmpfile = false;
 
     if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1 && !empty($input['url']) && !empty($input['downloadFileType']))
     {
-        $url = escapeshellarg($input['url']);
         $namingScheme = '%(uploader)s - %(title)s (key: %(id)s).%(ext)s';
         $temp = tempnam($folder, ".ytprogress_");
 
-        $_SESSION['task'] = $temp;
-        $cmd = 'youtube-dl --newline -f \'bestvideo[height<=1080]+bestaudio/best[height<=1080]\' -o ' . escapeshellarg($folder.$namingScheme) . ' ' . $url;
+        if(!empty($_FILES) && $_FILES['url']['error'] == UPLOAD_ERR_OK && is_uploaded_file($_FILES['url']['tmp_name']))
+        {
+            $handle = fopen($_FILES['url']['tmp_name'], "r");
+            $tmpfilename = $temp . '_list';
+            $tmpfile = fopen($tmpfilename, 'w');
+            $content = "";
 
+            if ($handle) {
+                for ($line=0; $line < 64; $line++) {
+                    if($linecontent = fgets($handle))
+                        $content .= $linecontent;
+                    else
+                        break;
+                }
+                fclose($handle);
+            }
+            fwrite($tmpfile, $content);
+            fclose($tmpfile);
+
+            $url = "-a " . escapeshellarg($tmpfilename);
+        }
+        else
+        {
+            $url = escapeshellarg($input['url']);
+        }
+
+        $_SESSION['task'] = $temp;
+
+        $cmd = 'youtube-dl --newline -f \'bestvideo[height<=1080]+bestaudio/best[height<=1080]\' -o ' . escapeshellarg($folder.$namingScheme) . ' ' . $url;
+        
         if ($input['downloadFileType'] == 'audio')
             $cmd .= ' -x --audio-format mp3';
 
-        exec('nohup sh -c "' . $cmd . ' > ' . $temp . ' ; rm ' . $temp . '" > /dev/null 2>/dev/null &', $output, $ret);
+        exec('nohup sh -c "' . $cmd . ' > ' . $temp . ' ; rm ' . $temp . ' ; rm ' . $temp . '_list" > /dev/null 2>/dev/null &', $output, $ret);
 
         if($ret == 0)
         {

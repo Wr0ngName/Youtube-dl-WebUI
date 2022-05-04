@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="container">
-            <h1>Download</h1>
+            <h1>Download<span id="ajax-file-list"></span></h1>
 <?php
     if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
     { ?>
@@ -50,7 +50,8 @@
                     <div class="form-group">
                         <div class="col-lg-12">
                             <label><input class="form-check-input" type="radio" name="downloadFileType" id="downloadFileType" value="video" checked="checked"> Video (MP4)</label>&nbsp;&nbsp;&nbsp;&nbsp;
-                            <label><input class="form-check-input" type="radio" name="downloadFileType" id="downloadFileType" value="audio"> Audio (MP3)</label>
+                            <label><input class="form-check-input" type="radio" name="downloadFileType" id="downloadFileType" value="audio"> Audio (MP3)</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <label><input class="form-check-input" type="checkbox" name="downloadFileList" id="downloadFileList" value="list" onclick="toggleFileUpload(this)"> Upload a list of URLs (*.txt file, one URL per line, 64 max)</label>
                         </div>
                     </div>
                 </fieldset>
@@ -78,6 +79,16 @@
             var progressLast = 999;
             var progressSame = 0;
 
+            function toggleFileUpload(e) {
+                if (e.checked) {
+                    document.getElementById("url").type = "file";
+                    document.getElementById("dlForm").enctype = "multipart/form-data";
+                } else {
+                    document.getElementById("url").type = "text";
+                    document.getElementById("dlForm").enctype = "application/x-www-form-urlencoded";
+                }
+            }
+
             function showNotif() {
                 document.getElementById("ajax-notif").style.display = "block";
             }
@@ -94,7 +105,14 @@
                     var output = document.getElementById("ajax-output");
                     if (requestProgress.readyState === 4 && requestProgress.status === 200) {
                         var jsonDataProgress = JSON.parse(requestProgress.response);
+
                         document.getElementById("ajax-wait-progress").style.width = jsonDataProgress.progress + "%";
+
+                        if(jsonDataProgress.slist > 1)
+                        {
+                            document.getElementById("ajax-file-list").innerHTML = '&nbsp;&nbsp;-&nbsp;&nbsp;File ' + jsonDataProgress.index + ' of ' + jsonDataProgress.slist;
+                        }
+
                         if(jsonDataProgress.progress == progressLast) {
                             progressSame = progressSame + 1;
                             if(progressLast > 0 && progressSame >= 10)
@@ -116,18 +134,21 @@
                             output.innerHTML = '<div class="alert alert-success"><strong>Download succeed!</strong> <a href="<?php echo $listPage; ?>" class="alert-link">Go to the file</a>.</div>';
                             document.getElementById("ajax-form").style.display = 'block';
                             document.getElementById("ajax-wait").style.display = 'none';
+                            document.getElementById("ajax-file-list").innerHTML = '';
                             hideNotif();
                         } else if(jsonDataProgress.message != "") {
                             stopProgress();
                             output.innerHTML = '<div class="alert alert-danger"><strong>Download error!</strong> General error happened. Contact the administrator if this happens again.</div>';
                             document.getElementById("ajax-form").style.display = 'block';
                             document.getElementById("ajax-wait").style.display = 'none';
+                            document.getElementById("ajax-file-list").innerHTML = '';
                             hideNotif();
                         }
                     } else {
                         output.innerHTML = '<div class="alert alert-danger"><strong>Download error!</strong> General error happened. Contact the administrator if this happens again.</div>';
                         document.getElementById("ajax-form").style.display = 'block';
                         document.getElementById("ajax-wait").style.display = 'none';
+                        document.getElementById("ajax-file-list").innerHTML = '';
                         hideNotif();
                     }
                 }
@@ -157,13 +178,18 @@
                         downloadFileType = ele[i].value;
                 }
 
-                var url = document.getElementById("url").value;
+                var formData = new FormData();
+                formData.append("downloadFileType", downloadFileType);
 
-                var data = encodeURIComponent("downloadFileType") + '=' + encodeURIComponent(downloadFileType) + '&' + encodeURIComponent("url") + '=' + encodeURIComponent(url);
+                if(document.getElementById("downloadFileList").checked) {
+                    var files = document.querySelector('[name=url]').files;
+                    formData.append("url", files[0]);
+                } else {
+                    formData.append("url", document.getElementById('url').value);
+                }
 
-                var target = "<?php echo $ajaxPage; ?>?" + data;
-                request.open("GET", target, true);
-                request.setRequestHeader("Content-Type", "x-www-form-urlencoded");
+                var target = "<?php echo $ajaxPage; ?>";
+                request.open("POST", target, true);
 
                 request.onload = function () {
                     var output = document.getElementById("ajax-output");
@@ -186,7 +212,7 @@
                 document.getElementById("ajax-form").style.display = 'none';
                 document.getElementById("ajax-wait").style.display = 'block';
 
-                request.send();
+                request.send(formData);
 
             });
 
