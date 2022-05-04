@@ -28,7 +28,7 @@
             if ($handle) {
                 for ($line=0; $line < $maxUrls; $line++) {
                     if($linecontent = fgets($handle))
-                        if (!filter_var($linecontent, FILTER_VALIDATE_URL) === false)
+                        if (!filter_var(trim($linecontent), FILTER_VALIDATE_URL) === false)
                             $content .= $linecontent;
                     else
                         break;
