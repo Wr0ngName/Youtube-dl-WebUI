@@ -93,14 +93,24 @@ if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
                 <tbody>
                     <tr>
 <?php
-            foreach(glob($folder."*") as $file)
+            $filesList = glob($folder."*");
+            
+            foreach($filesList as $file)
             {
-                $filename = str_replace($folder, "", $file); // Need to fix accent problem with something like this : utf8_encode
-                echo "<tr>"; //New line
-                echo "<td height=\"30px\"><a target=\"_blank\" href=\"".$getPage."?fileToGet=".base64_encode($filename)."\">$filename</a></td>"; //1st col
-                echo "<td>".human_filesize(filesize($folder.$filename))."</td>"; //2nd col
-                echo "<td><a href=\"".$listPage."?fileToDel=".base64_encode($filename)."\" class=\"text-danger\">Delete</a></td>"; //3rd col
-                echo "</tr>"; //End line
+                if(!strpos($file, '.ytdl') && !strpos($file, '.temp'))
+                {
+                    $filename = str_replace($folder, "", $file); // Need to fix accent problem with something like this : utf8_encode
+
+                    $style = "";
+                    if(strpos($file, '.part'))
+                        $style = "background-color: #d5e8ee !important;";
+
+                    echo "<tr>"; //New line
+                    echo "<td height=\"30px\" style=\"".$style."\"><a target=\"_blank\" href=\"".$getPage."?fileToGet=".base64_encode($filename)."\">$filename</a></td>"; //1st col
+                    echo "<td>".human_filesize(filesize($folder.$filename))."</td>"; //2nd col
+                    echo "<td><a href=\"".$listPage."?fileToDel=".base64_encode($filename)."\" class=\"text-danger\">Delete</a></td>"; //3rd col
+                    echo "</tr>"; //End line
+                }
             }
         }
 } 
