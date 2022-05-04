@@ -28,7 +28,8 @@
             if ($handle) {
                 for ($line=0; $line < $maxUrls; $line++) {
                     if($linecontent = fgets($handle))
-                        $content .= $linecontent;
+                        if (!filter_var($linecontent, FILTER_VALIDATE_URL) === false)
+                            $content .= $linecontent;
                     else
                         break;
                 }
@@ -47,7 +48,7 @@
         $_SESSION['task'] = $temp;
 
         $cmd = 'youtube-dl --newline -f \'bestvideo[height<=1080]+bestaudio/best[height<=1080]\' -o ' . escapeshellarg($folder.$namingScheme) . ' ' . $url;
-        
+
         if ($input['downloadFileType'] == 'audio')
             $cmd .= ' -x --audio-format mp3';
 
