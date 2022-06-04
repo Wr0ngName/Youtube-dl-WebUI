@@ -15,7 +15,7 @@
 
     if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1 && !empty($input['url']) && !empty($input['downloadFileType']))
     {
-        $namingScheme = '%(uploader)s - %(title)s (key: %(id)s).%(ext)s';
+        $namingScheme = '%(uploader)s - %(title)s (%(id)s).%(ext)s';
         $temp = tempnam($folder, ".ytprogress_");
 
         if(!empty($_FILES) && $_FILES['url']['error'] == UPLOAD_ERR_OK && is_uploaded_file($_FILES['url']['tmp_name']))
