@@ -80,7 +80,11 @@
               <div class="toast-body">
                 Dont panic! Your file is being converted to the right format.<br />Please be patient.
               </div>
-            </div>
+	    </div>
+	
+	    <div class="alert alert-warning" role="alert">
+	    	<strong>Legal disclaimer:</strong> Before using this tool, you must own the rights to the video(s), or get permission from the owner. 
+	    </div>
 
             <script type="text/javascript">
             const contactForm = document.getElementById("dlForm");
