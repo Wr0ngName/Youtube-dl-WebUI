@@ -47,7 +47,7 @@
 
         $_SESSION['task'] = $temp;
 
-        $cmd = 'youtube-dl --newline --restrict-filenames -f \'bestvideo[height<=1080]+bestaudio/best[height<=1080]\' -o ' . escapeshellarg($folder.$namingScheme) . ' ' . $url;
+        $cmd = 'youtube-dl --no-mtime --newline --restrict-filenames -f \'bestvideo[height<=1080]+bestaudio/best[height<=1080]\' -o ' . escapeshellarg($folder.$namingScheme) . ' ' . $url;
 
         if ($input['downloadFileType'] == 'audio')
             $cmd .= ' -x --audio-format mp3';
