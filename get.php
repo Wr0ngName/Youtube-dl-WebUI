@@ -35,7 +35,6 @@
                 flush();
                 readfile($folder.$fileToGet);
 
-                unlink($folder.$fileToGet);
                 exit;
 
             }

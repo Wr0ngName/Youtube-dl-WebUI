@@ -47,19 +47,23 @@ if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
                     <tr>
 <?php
             $filesList = glob($folder."*");
-            
+            usort($filesList, function($a, $b) => filemtime($a) - filemtime($b));
+	     
             foreach($filesList as $file)
             {
                 if(!strpos($file, '.ytdl') && !strpos($file, '.temp'))
                 {
                     $filename = str_replace($folder, "", $file); // Need to fix accent problem with something like this : utf8_encode
 
+		    $link = $getPage."?fileToGet=".base64_encode($filename);
                     $style = "";
-                    if(strpos($file, '.part'))
+		    if(strpos($file, '.part'))
+		    {
+			$link = "#";
                         $style = "background-color: #d5e8ee !important;";
-
+		    }
                     echo "<tr>"; //New line
-                    echo "<td height=\"30px\" style=\"".$style."\"><a target=\"_blank\" href=\"".$getPage."?fileToGet=".base64_encode($filename)."\">$filename</a></td>"; //1st col
+                    echo "<td height=\"30px\" style=\"".$style."\"><a target=\"_blank\" href=\"".$link."\">$filename</a></td>"; //1st col
                     echo "<td>".human_filesize(filesize($folder.$filename))."</td>"; //2nd col
                     echo "</tr>"; //End line
                 }

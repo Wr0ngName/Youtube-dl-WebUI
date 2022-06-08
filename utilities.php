@@ -18,7 +18,7 @@ function listOldDownloads($folder)
     $now   = time();
     foreach ($files as $file) {
         if (is_file($file)) {
-            if ($now - filemtime($file) > 60 * 60 * 2) { // 2 hours
+            if ($now - filemtime($file) > 60 * 60 * 1) { // 1 hour
                 array_push($output, $file);
             }
         }
