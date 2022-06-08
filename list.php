@@ -47,7 +47,7 @@ if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
                     <tr>
 <?php
             $filesList = glob($folder."*");
-            usort($filesList, function($a, $b) => filemtime($a) - filemtime($b));
+            usort($filesList, function($a, $b) { return filemtime($a) - filemtime($b); });
 	     
             foreach($filesList as $file)
             {
