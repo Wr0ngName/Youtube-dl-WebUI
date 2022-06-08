@@ -32,55 +32,9 @@
         </div>
         <div class="container">
 <?php
-if($security == 1 && isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
+if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
 {
-    if(isset($_GET['fileToDel']))
-    {
-        $rawFile = base64_decode($_GET['fileToDel']);
-        $tmpFile = pathinfo($rawFile);
-        $fileToDel  = $tmpFile['basename'];
-
-        $outputType = 'danger';
-
-        if(file_exists($folder.$fileToDel) && substr($fileToDel, 0, 1) != '/' && substr($fileToDel, 0, 1) != '.')
-        {
-            if(unlink($folder.$fileToDel))
-            {
-                $outputType = 'success';
-                $outputMsg = 'File '.$fileToDel.' has been deleted!';
-                echo '<div class="panel-heading"><h3 class="panel-title">File to delete : '.$fileToDel.'</h3></div>';
-                echo '<div class="panel-body"></div>';
-                echo '<p><a href="'.$listPage.'">Go back</a></p>';
-            }
-            else
-            {
-                $outputMsg = 'File '.$fileToDel.' could not be deleted!';
-            }
-        }
-        else
-        {
-                $outputMsg = 'File '.$fileToDel.' could not be found!';
-        }
-        
-        echo '<div class="row">';
-        echo '<div class="col-lg-12">';
-
-        echo '<div class="panel panel-'.$outputType.'">';
-        echo '  <div class="panel-heading"><h3 class="panel-title">File to delete : '.$fileToDel.'</h3></div>';
-        echo '  <div class="panel-body">'.$outputMsg.'</div>';
-        echo '</div>';
-        echo '<p><a href="'.$listPage.'">Go back</a></p>';
-
-        echo '</div>';
-        echo '</div>';
-    }
-    elseif(!file_exists($folder))
-    {
-            echo '<div class="alert alert-danger">
-                    <strong>Error : </strong> Destination folder doesn\'t exist or is not found here.
-                </div>';
-    }
-    else { ?>
+    ?>
             <h2>List of available videos :</h2>
             <table class="table table-striped table-hover ">
                 <thead>
@@ -110,7 +64,6 @@ if($security == 1 && isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
                     echo "</tr>"; //End line
                 }
             }
-        }
 } 
 else {
     echo '<div class="alert alert-danger"><strong>Access denied!</strong></div>';
