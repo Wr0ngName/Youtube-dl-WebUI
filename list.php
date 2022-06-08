@@ -32,7 +32,7 @@
         </div>
         <div class="container">
 <?php
-if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
+if($security == 1 && isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
 {
     if(isset($_GET['fileToDel']))
     {
@@ -87,7 +87,6 @@ if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
                     <tr>
                         <th style="min-width:800px; height:35px">Title</th>
                         <th style="min-width:80px">Size</th>
-                        <th style="min-width:110px">Remove link</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -108,14 +107,13 @@ if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1)
                     echo "<tr>"; //New line
                     echo "<td height=\"30px\" style=\"".$style."\"><a target=\"_blank\" href=\"".$getPage."?fileToGet=".base64_encode($filename)."\">$filename</a></td>"; //1st col
                     echo "<td>".human_filesize(filesize($folder.$filename))."</td>"; //2nd col
-                    echo "<td><a href=\"".$listPage."?fileToDel=".base64_encode($filename)."\" class=\"text-danger\">Delete</a></td>"; //3rd col
                     echo "</tr>"; //End line
                 }
             }
         }
 } 
 else {
-    echo '<div class="alert alert-danger"><strong>Access denied:</strong> You must log in!</div>';
+    echo '<div class="alert alert-danger"><strong>Access denied!</strong></div>';
 } ?>
                     </tr>
                 </tbody>
@@ -126,7 +124,7 @@ else {
         <br>
         <footer>
             <div class="well text-center">
-                <p><a href="https://github.com/p1rox/Youtube-dl-WebUI" target="_blank">Forked from Github</a></p>
+                <p><a href="https://github.com/Wr0ngName/Youtube-dl-WebUI" target="_blank">Forked from Github</a></p>
                 <p>Adapted by <a href="https://twitter.com/_wr0ngname_" target="_blank">@_wr0ngname_</a> - Website : <a href="https://wr0ng.name" target="_blank">wr0ng.name</a></p>
             </div>
         </footer>

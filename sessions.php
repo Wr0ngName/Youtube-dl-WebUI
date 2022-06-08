@@ -7,10 +7,10 @@
 
 	function startSession($pass)
 	{
-		$pass = htmlentities($pass);
 		global $security;
 		if($security == 1)
 		{
+			$pass = htmlentities($pass);
 			if(passwordMatch($pass)) $_SESSION['logged'] = 1;
 			else $_SESSION['logged'] = 0;
 		} else {

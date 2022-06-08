@@ -3,8 +3,15 @@
     require_once("sessions.php");
     require_once("utilities.php");
 
-    if(isset($_POST['passwd']) && !empty($_POST['passwd'])) startSession($_POST['passwd']);
-    if(isset($_GET['logout']) && $_GET['logout'] == 1) endSession();
+    if($security == 1)
+    {
+        if(isset($_POST['passwd']) && !empty($_POST['passwd'])) startSession($_POST['passwd']);
+        if(isset($_GET['logout']) && $_GET['logout'] == 1) endSession();
+    }
+    else
+    {
+        startSession('');
+    }
 
     purgeOldDownloads($folder);
 ?>
@@ -41,10 +48,10 @@
             <form class="form-horizontal" id="dlForm" action="<?php echo $ajaxPage; ?>" method="POST">
                 <fieldset id="ajax-form">
                     <div class="form-group">
-                        <div class="col-lg-10">
+                        <div class="col-lg-10 col-md-8 col-sm-8 col-xs-6">
                             <input class="form-control" id="url" name="url" placeholder="Link to video or playlist" type="text">
                         </div>
-                        <div class="col-lg-2">
+                        <div class="col-lg-2 col-md-4 col-sm-4 col-xs-6">
                         <button type="submit" class="btn btn-primary">Download</button>
                         </div>
                     </div>
@@ -273,7 +280,7 @@
         </form>
 <?php
         }
-    if(isset($_SESSION['logged']) && $_SESSION['logged'] == 1) echo '<p><a href="index.php?logout=1">Logout</a></p>';
+    if($security == 1 && isset($_SESSION['logged']) && $_SESSION['logged'] == 1) echo '<p><a href="index.php?logout=1">Logout</a></p>';
 ?>
         </div><!-- End container -->
         <footer>
