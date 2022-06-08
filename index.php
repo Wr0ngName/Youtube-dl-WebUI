@@ -5,6 +5,8 @@
 
     if(isset($_POST['passwd']) && !empty($_POST['passwd'])) startSession($_POST['passwd']);
     if(isset($_GET['logout']) && $_GET['logout'] == 1) endSession();
+
+    purgeOldDownloads($folder);
 ?>
 <!DOCTYPE html>
 <html>

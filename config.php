@@ -21,11 +21,11 @@ $ajaxPage = "downloadAsync.php";
 $progressPage = "progressAsync.php";
 
 //Max URLs for file upload
-$maxUrls = 128;
+$maxUrls = 5;
 
 // Enable password to access the panel
 // 1 -> enable 0 -> disable
-$security = 1; 
+$security = 0; 
 
 // PHP::md5(); You can use md5.php to generate an other one
 // default : root

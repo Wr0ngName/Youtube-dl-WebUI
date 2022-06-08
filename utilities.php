@@ -1,5 +1,31 @@
 <?php
 
+function purgeOldDownloads($folder)
+{
+    $i = 0;
+    $olds = listOldDownloads($folder);
+    foreach ($olds as $old) {
+        unlink($old);
+        $i = $i + 1;
+    }
+    return $i;
+}
+
+function listOldDownloads($folder)
+{
+    $output = array();
+    $files = glob($folder."*");
+    $now   = time();
+    foreach ($files as $file) {
+        if (is_file($file)) {
+            if ($now - filemtime($file) > 60 * 60 * 2) { // 2 hours
+                array_push($output, $file);
+            }
+        }
+    }
+    return $output;
+}
+
 // Test if destination folder exists
 function destFolderExists($destFolder)
 {
